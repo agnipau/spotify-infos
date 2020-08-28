@@ -1,19 +1,9 @@
+mod utils;
+
 use dbus::{arg, blocking::Connection};
 use std::collections::HashMap;
 use std::error::Error;
 use std::time::Duration;
-
-pub fn milliseconds_to_time(duration: f64) -> String {
-    let milliseconds = ((duration % 1000.0) / 100.0).floor();
-    let seconds = ((duration / 1000.0) % 60.0).floor();
-    let minutes = ((duration / (1000.0 * 60.0)) % 60.0).floor();
-    let hours = ((duration / (1000.0 * 60.0 * 60.0)) % 24.0).floor();
-
-    format!(
-        "{:0>2}:{:0>2}:{:0>2}:{:0>2}",
-        hours, minutes, seconds, milliseconds
-    )
-}
 
 #[derive(Debug)]
 pub struct SongInfos {
@@ -44,11 +34,9 @@ impl SongInfos {
             .as_str()
             .unwrap()
             .to_owned();
-        // Rant: why the fuck should the track number have a negative value?
         let track_number = SongInfos::extract_field(&metadata, "xesam:trackNumber")
             .as_i64()
             .unwrap();
-        // Same as above
         let disc_number = SongInfos::extract_field(&metadata, "xesam:discNumber")
             .as_i64()
             .unwrap();
@@ -107,7 +95,7 @@ impl SongInfos {
             album,
             auto_rating,
             total_duration_microseconds,
-            total_duration_formatted: milliseconds_to_time(
+            total_duration_formatted: utils::milliseconds_to_time(
                 total_duration_microseconds as f64 / 1000.0,
             ),
             title,

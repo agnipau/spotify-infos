@@ -1,8 +1,6 @@
-mod infos_extractor;
-
-use infos_extractor::SongInfos;
 use lazy_static::lazy_static;
 use regex::{Captures, Regex};
+use spotify_infos::SongInfos;
 use std::{env, process};
 
 fn access_song_infos(song_infos: &SongInfos, field: &str) -> Option<String> {
@@ -30,7 +28,7 @@ lazy_static! {
 
 fn main() {
     let song_infos =
-        infos_extractor::current_song_infos().expect("Failed to fetch current song infos");
+        spotify_infos::current_song_infos().expect("Failed to fetch current song infos");
     let args = env::args().collect::<Vec<String>>();
 
     if args.len() == 1 {
