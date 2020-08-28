@@ -36,7 +36,7 @@ impl SongInfos {
     fn extract_field<'a>(metadata: &'a Metadata, field: &str) -> &'a dyn arg::RefArg {
         metadata
             .get(field)
-            .expect(&format!("Failed to get {}", field))
+            .unwrap_or_else(|| panic!("Failed to get {}", field))
     }
 
     fn new(metadata: Metadata, playback_status: String) -> SongInfos {
@@ -77,12 +77,10 @@ impl SongInfos {
         let album_artists = SongInfos::extract_field(&metadata, "xesam:albumArtist")
             .as_iter()
             .unwrap()
-            .into_iter()
             .flat_map(|artists| {
                 artists
                     .as_iter()
                     .unwrap()
-                    .into_iter()
                     .map(|artist| artist.as_str().unwrap().to_owned())
                     .collect::<Vec<String>>()
             })
@@ -90,12 +88,10 @@ impl SongInfos {
         let artists = SongInfos::extract_field(&metadata, "xesam:artist")
             .as_iter()
             .unwrap()
-            .into_iter()
             .flat_map(|artists| {
                 artists
                     .as_iter()
                     .unwrap()
-                    .into_iter()
                     .map(|artist| artist.as_str().unwrap().to_owned())
                     .collect::<Vec<String>>()
             })

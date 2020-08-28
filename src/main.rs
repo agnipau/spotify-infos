@@ -47,7 +47,7 @@ fn main() {
 
     let output = RE.replace_all(format_str, |caps: &Captures| {
         access_song_infos(&song_infos, &caps[1])
-            .expect(&format!("Invalid format tag: `{}`", &caps[1]))
+            .unwrap_or_else(|| panic!("Invalid format tag: `{}`", &caps[1]))
     });
     println!("{}", output);
 }
